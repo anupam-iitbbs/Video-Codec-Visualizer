@@ -4,6 +4,7 @@
 #include <string>
 #include <vector>
 
+#include "ivcv/core/ChromaSubsamplingMode.h"
 #include "ivcv/core/ImageBuffer.h"
 
 namespace ivcv::core {
@@ -16,10 +17,15 @@ namespace ivcv::core {
 /// from and/or writes to: rgbImage (loaded once by ImageLoader and left
 /// untouched thereafter so the UI can always show the original alongside
 /// any transformed output) and yuvImage (written by ColorSpaceConverter,
-/// read by ChromaSubsampler starting in Stage 3). See
-/// docs/ARCHITECTURE.md, section 6, for how later stages will extend this
-/// context further (subsampled planes, per-block coefficient data, and so
-/// on) without requiring a rewrite of earlier stages.
+/// read by ChromaSubsampler starting in Stage 3). Stage 3 adds
+/// yPlane()/cbPlane()/crPlane(): ChromaSubsampler splits yuvImage() into a
+/// full-resolution Y' plane and Cb/Cr planes reduced according to the
+/// active ChromaSubsamplingMode, which is recorded here too so later
+/// stages and the UI can interpret or upsample those planes without
+/// re-deriving how they were produced. See docs/ARCHITECTURE.md, section
+/// 6, for how later stages will extend this context further (per-block
+/// coefficient data, and so on) without requiring a rewrite of earlier
+/// stages.
 class PipelineContext {
 public:
     PipelineContext() = default;
@@ -42,14 +48,40 @@ public:
     [[nodiscard]] ImageBuffer<std::uint8_t>& yuvImage() noexcept;
     [[nodiscard]] const ImageBuffer<std::uint8_t>& yuvImage() const noexcept;
 
-    /// Clears the execution log and resets both image buffers to empty,
-    /// returning the context to its initial state.
+    /// The full-resolution Y' (luma) plane, written by
+    /// ChromaSubsampler::process().
+    [[nodiscard]] ImageBuffer<std::uint8_t>& yPlane() noexcept;
+    [[nodiscard]] const ImageBuffer<std::uint8_t>& yPlane() const noexcept;
+
+    /// The Cb (blue-difference chroma) plane. Its resolution depends on
+    /// chromaSubsamplingMode().
+    [[nodiscard]] ImageBuffer<std::uint8_t>& cbPlane() noexcept;
+    [[nodiscard]] const ImageBuffer<std::uint8_t>& cbPlane() const noexcept;
+
+    /// The Cr (red-difference chroma) plane. Its resolution depends on
+    /// chromaSubsamplingMode().
+    [[nodiscard]] ImageBuffer<std::uint8_t>& crPlane() noexcept;
+    [[nodiscard]] const ImageBuffer<std::uint8_t>& crPlane() const noexcept;
+
+    /// Records which subsampling mode produced the current cbPlane()/
+    /// crPlane() contents, so later stages and UI code can upsample or
+    /// otherwise interpret them correctly without the caller separately
+    /// tracking which mode was used.
+    void setChromaSubsamplingMode(ChromaSubsamplingMode mode) noexcept;
+    [[nodiscard]] ChromaSubsamplingMode chromaSubsamplingMode() const noexcept;
+
+    /// Clears the execution log and resets every image buffer and plane
+    /// to empty, returning the context to its initial state.
     void reset();
 
 private:
     std::vector<std::string> executionLog_;
     ImageBuffer<std::uint8_t> rgbImage_;
     ImageBuffer<std::uint8_t> yuvImage_;
+    ImageBuffer<std::uint8_t> yPlane_;
+    ImageBuffer<std::uint8_t> cbPlane_;
+    ImageBuffer<std::uint8_t> crPlane_;
+    ChromaSubsamplingMode chromaSubsamplingMode_ = ChromaSubsamplingMode::Yuv444;
 };
 
 } // namespace ivcv::core
