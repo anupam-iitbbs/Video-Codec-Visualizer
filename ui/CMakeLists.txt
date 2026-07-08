@@ -8,6 +8,7 @@
 
 add_library(ivcv_ui
 RgbYuvView.cpp
+ChromaSubsamplingView.cpp
 )
 
 add_library(ivcv::ui ALIAS ivcv_ui)
