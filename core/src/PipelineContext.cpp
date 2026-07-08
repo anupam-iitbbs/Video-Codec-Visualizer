@@ -58,6 +58,14 @@ ChromaSubsamplingMode PipelineContext::chromaSubsamplingMode() const noexcept {
     return chromaSubsamplingMode_;
 }
 
+std::vector<Block>& PipelineContext::blocks() noexcept {
+    return blocks_;
+}
+
+const std::vector<Block>& PipelineContext::blocks() const noexcept {
+    return blocks_;
+}
+
 void PipelineContext::reset() {
     executionLog_.clear();
     rgbImage_ = ImageBuffer<std::uint8_t>();
@@ -66,6 +74,7 @@ void PipelineContext::reset() {
     cbPlane_ = ImageBuffer<std::uint8_t>();
     crPlane_ = ImageBuffer<std::uint8_t>();
     chromaSubsamplingMode_ = ChromaSubsamplingMode::Yuv444;
+    blocks_.clear();
 }
 
 } // namespace ivcv::core
