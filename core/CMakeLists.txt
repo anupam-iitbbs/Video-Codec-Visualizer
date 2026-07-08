@@ -7,6 +7,7 @@ add_library(ivcv_core
 src/PipelineContext.cpp
 src/ColorSpaceConverter.cpp
 src/ImageLoader.cpp
+src/ChromaSubsampler.cpp
 )
 
 add_library(ivcv::core ALIAS ivcv_core)
