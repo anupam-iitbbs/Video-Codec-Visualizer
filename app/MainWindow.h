@@ -11,6 +11,7 @@ QT_END_NAMESPACE
 namespace ivcv::ui {
 class RgbYuvView;
 class ChromaSubsamplingView;
+class BlockPartitioningView;
 }
 
 namespace ivcv::app {
@@ -22,10 +23,12 @@ namespace ivcv::app {
 /// docs/ARCHITECTURE.md, section 5, with a placeholder central canvas.
 /// Stage 2 wired in the first real module view: selecting "RGB to YUV" in
 /// the stage list swaps the central canvas to ivcv::ui::RgbYuvView. Stage
-/// 3 adds a second one: selecting "Chroma Subsampling" swaps to
-/// ivcv::ui::ChromaSubsamplingView. Every other stage still shows the
-/// placeholder until its own module view is implemented, so the shell
-/// continues to work end-to-end at every stage.
+/// 3 added a second one: selecting "Chroma Subsampling" swaps to
+/// ivcv::ui::ChromaSubsamplingView. Stage 4 adds a third: selecting
+/// "Block Partitioning" swaps to ivcv::ui::BlockPartitioningView. Every
+/// other stage still shows the placeholder until its own module view is
+/// implemented, so the shell continues to work end-to-end at every
+/// stage.
 class MainWindow : public QMainWindow {
     Q_OBJECT
 
@@ -53,6 +56,7 @@ private:
     QLabel* canvasPlaceholder_ = nullptr;
     ivcv::ui::RgbYuvView* rgbYuvView_ = nullptr;
     ivcv::ui::ChromaSubsamplingView* chromaSubsamplingView_ = nullptr;
+    ivcv::ui::BlockPartitioningView* blockPartitioningView_ = nullptr;
 };
 
 } // namespace ivcv::app
