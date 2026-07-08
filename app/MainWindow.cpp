@@ -5,17 +5,19 @@
 #include <QListWidget>
 #include <QStackedWidget>
 
+#include "ChromaSubsamplingView.h"
 #include "RgbYuvView.h"
 
 namespace ivcv::app {
 
 namespace {
-/// Index of "RGB to YUV" within the stage list populated by
-/// setupDockPanels(). Kept as a single named constant so the two places
-/// that care about stage order (the list contents and the view-swapping
-/// logic) cannot silently drift apart.
+/// Index of "RGB to YUV" and "Chroma Subsampling" within the stage list
+/// populated by setupDockPanels(). Kept as single named constants so the
+/// two places that care about stage order (the list contents and the
+/// view-swapping logic) cannot silently drift apart.
 constexpr int kRgbToYuvStageRow = 1;
-}  // namespace
+constexpr int kChromaSubsamplingStageRow = 2;
+} // namespace
 
 MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent) {
     setWindowTitle(QStringLiteral("Interactive Video Codec Visualizer"));
@@ -32,15 +34,19 @@ void MainWindow::setupCentralCanvas() {
 
     canvasPlaceholder_ = new QLabel(
         QStringLiteral(
-            "Select a pipeline stage to begin.\n\n"
+            "Select a pipeline stage to begin.
+
+"
             "Module views appear here as each stage is implemented."),
         centralStack_);
     canvasPlaceholder_->setAlignment(Qt::AlignCenter);
 
     rgbYuvView_ = new ivcv::ui::RgbYuvView(centralStack_);
+    chromaSubsamplingView_ = new ivcv::ui::ChromaSubsamplingView(centralStack_);
 
-    centralStack_->addWidget(canvasPlaceholder_);  // index 0: placeholder
-    centralStack_->addWidget(rgbYuvView_);          // index 1: RGB to YUV
+    centralStack_->addWidget(canvasPlaceholder_); // index 0: placeholder
+    centralStack_->addWidget(rgbYuvView_); // index 1: RGB to YUV
+    centralStack_->addWidget(chromaSubsamplingView_); // index 2: Chroma Subsampling
 
     setCentralWidget(centralStack_);
 }
@@ -62,7 +68,7 @@ void MainWindow::setupDockPanels() {
         QStringLiteral("Quality Metrics"),
     });
     connect(stageListWidget_, &QListWidget::currentRowChanged, this,
-            &MainWindow::onStageSelectionChanged);
+        &MainWindow::onStageSelectionChanged);
 
     stageDock->setWidget(stageListWidget_);
     addDockWidget(Qt::LeftDockWidgetArea, stageDock);
@@ -71,6 +77,8 @@ void MainWindow::setupDockPanels() {
 void MainWindow::onStageSelectionChanged(int row) {
     if (row == kRgbToYuvStageRow) {
         centralStack_->setCurrentWidget(rgbYuvView_);
+    } else if (row == kChromaSubsamplingStageRow) {
+        centralStack_->setCurrentWidget(chromaSubsamplingView_);
     } else {
         centralStack_->setCurrentWidget(canvasPlaceholder_);
     }
