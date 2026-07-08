@@ -4,6 +4,7 @@
 #include <string>
 #include <vector>
 
+#include "ivcv/core/Block.h"
 #include "ivcv/core/ChromaSubsamplingMode.h"
 #include "ivcv/core/ImageBuffer.h"
 
@@ -22,10 +23,14 @@ namespace ivcv::core {
 /// full-resolution Y' plane and Cb/Cr planes reduced according to the
 /// active ChromaSubsamplingMode, which is recorded here too so later
 /// stages and the UI can interpret or upsample those planes without
-/// re-deriving how they were produced. See docs/ARCHITECTURE.md, section
-/// 6, for how later stages will extend this context further (per-block
-/// coefficient data, and so on) without requiring a rewrite of earlier
-/// stages.
+/// re-deriving how they were produced. Stage 4 adds blocks(): the
+/// quadtree of Block leaves BlockPartitioner computes by recursively
+/// splitting yPlane() based on per-block variance, read by DCT (Stage 5)
+/// onward as the unit of transform coding, and by the UI to draw the
+/// partition grid and answer per-block queries. See docs/ARCHITECTURE.md,
+/// section 6, for how later stages will extend this context further
+/// (per-block coefficient data, and so on) without requiring a rewrite of
+/// earlier stages.
 class PipelineContext {
 public:
     PipelineContext() = default;
@@ -70,8 +75,14 @@ public:
     void setChromaSubsamplingMode(ChromaSubsamplingMode mode) noexcept;
     [[nodiscard]] ChromaSubsamplingMode chromaSubsamplingMode() const noexcept;
 
-    /// Clears the execution log and resets every image buffer and plane
-    /// to empty, returning the context to its initial state.
+    /// The quadtree partition of yPlane(), written by
+    /// BlockPartitioner::process(). Empty until that stage has run.
+    [[nodiscard]] std::vector<Block>& blocks() noexcept;
+    [[nodiscard]] const std::vector<Block>& blocks() const noexcept;
+
+    /// Clears the execution log and resets every image buffer, plane and
+    /// the block partition to empty, returning the context to its initial
+    /// state.
     void reset();
 
 private:
@@ -82,6 +93,7 @@ private:
     ImageBuffer<std::uint8_t> cbPlane_;
     ImageBuffer<std::uint8_t> crPlane_;
     ChromaSubsamplingMode chromaSubsamplingMode_ = ChromaSubsamplingMode::Yuv444;
+    std::vector<Block> blocks_;
 };
 
 } // namespace ivcv::core
