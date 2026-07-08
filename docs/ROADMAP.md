@@ -9,8 +9,8 @@ Each stage must compile cleanly, pass its unit tests, and be independently demoa
 | Stage | Title | Scope | Status |
 |---|---|---|---|
 | 0 | Software Requirements Specification | SRS, architecture, folder structure, roadmap (this document set) | Done |
-| 1 | Project Scaffolding | CMake skeleton, CI, folder structure, empty Qt shell that launches with the docked layout, no real modules yet | In Progress |
-| 2 | RGB to YUV Module | First real vertical slice: image ingestion + FR-2 | Planned |
+| 1 | Project Scaffolding | CMake skeleton, CI, folder structure, empty Qt shell that launches with the docked layout, no real modules yet | Done |
+| 2 | RGB to YUV Module | First real vertical slice: image ingestion + FR-2 | Done |
 | 3 | Chroma Subsampling Module | FR-3 | Planned |
 | 4 | Block Partitioning Module | FR-4 | Planned |
 | 5 | DCT / IDCT Module | FR-5 | Planned |
@@ -27,11 +27,12 @@ Each stage must compile cleanly, pass its unit tests, and be independently demoa
 
 ## Implemented Modules
 
-None yet outside of Stage 1 scaffolding. This section is updated at the end of every stage with a short description, screenshot placeholder, and link to the module's design doc under `docs/modules/`.
+- **Stage 1 - Project Scaffolding**: CMake build graph (`ivcv_core`, `ivcv_app`, `ivcv_ui`, test target), CI workflow, docked Qt shell with a placeholder canvas and the pipeline stage list.
+- **Stage 2 - RGB to YUV** (`modules/color_space/README.md`): `ImageBuffer<T>` data model, `ColorSpaceConverter` (BT.601/BT.709, forward and inverse), `ImageLoader` (OpenCV-backed file loading), `PipelineContext` extended with `rgbImage()`/`yuvImage()`, and `ui::RgbYuvView` (load image, pick standard, view input/luma/chroma side by side). Unit tests: `ImageBufferTest`, `ColorSpaceConverterTest`.
 
 ## Upcoming Modules
 
-See the Stage table above. Stage 2 (RGB to YUV) is next after Stage 1 scaffolding lands.
+See the Stage table above. Stage 3 (Chroma Subsampling) is next.
 
 ## Versioning
 
