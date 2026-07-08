@@ -102,12 +102,13 @@ Qt 6, OpenCV 4.x, Eigen 3, fmt, spdlog, GoogleTest, Google Benchmark. See [docs/
 
 ## Project Roadmap
 
-See [docs/ROADMAP.md](docs/ROADMAP.md) for the full staged plan. Current status: Stages 1, 2, and 3 done; Stage 4 (Block Partitioning) is next.
+See [docs/ROADMAP.md](docs/ROADMAP.md) for the full staged plan. Current status: Stages 1, 2, 3, and 4 done; Stage 5 (DCT / IDCT) is next.
 
 ## Implemented Modules
 
 - **RGB to YUV** — `ColorSpaceConverter` (BT.601/BT.709, forward and inverse), `ImageLoader`, and the `ui::RgbYuvView` module view. Educational note: [modules/color_space/README.md](modules/color_space/README.md).
 - **Chroma Subsampling** — `ChromaSubsampler` (4:4:4/4:2:2/4:2:0, Nearest/Box filters), extended `PipelineContext` plane accessors, and the `ui::ChromaSubsamplingView` module view. Educational note: [modules/chroma_subsampling/README.md](modules/chroma_subsampling/README.md).
+- **Block Partitioning** — `BlockPartitioner` (recursive variance-driven quadtree, 64 down to 8), the `Block` leaf-node type, and the `ui::BlockPartitioningView` module view with a clickable grid overlay and variance heatmap. Educational note: [modules/block_partitioning/README.md](modules/block_partitioning/README.md).
 
 See [docs/ROADMAP.md](docs/ROADMAP.md) for the complete implemented/upcoming module list.
 
