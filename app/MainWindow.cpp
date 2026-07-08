@@ -5,18 +5,20 @@
 #include <QListWidget>
 #include <QStackedWidget>
 
+#include "BlockPartitioningView.h"
 #include "ChromaSubsamplingView.h"
 #include "RgbYuvView.h"
 
 namespace ivcv::app {
 
 namespace {
-/// Index of "RGB to YUV" and "Chroma Subsampling" within the stage list
-/// populated by setupDockPanels(). Kept as single named constants so the
-/// two places that care about stage order (the list contents and the
+/// Index of each implemented module view within the stage list populated
+/// by setupDockPanels(). Kept as single named constants so the two
+/// places that care about stage order (the list contents and the
 /// view-swapping logic) cannot silently drift apart.
 constexpr int kRgbToYuvStageRow = 1;
 constexpr int kChromaSubsamplingStageRow = 2;
+constexpr int kBlockPartitioningStageRow = 3;
 } // namespace
 
 MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent) {
@@ -34,19 +36,19 @@ void MainWindow::setupCentralCanvas() {
 
     canvasPlaceholder_ = new QLabel(
         QStringLiteral(
-            "Select a pipeline stage to begin.
-
-"
+            "Select a pipeline stage to begin.\n"
             "Module views appear here as each stage is implemented."),
         centralStack_);
     canvasPlaceholder_->setAlignment(Qt::AlignCenter);
 
     rgbYuvView_ = new ivcv::ui::RgbYuvView(centralStack_);
     chromaSubsamplingView_ = new ivcv::ui::ChromaSubsamplingView(centralStack_);
+    blockPartitioningView_ = new ivcv::ui::BlockPartitioningView(centralStack_);
 
-    centralStack_->addWidget(canvasPlaceholder_); // index 0: placeholder
-    centralStack_->addWidget(rgbYuvView_); // index 1: RGB to YUV
+    centralStack_->addWidget(canvasPlaceholder_);    // index 0: placeholder
+    centralStack_->addWidget(rgbYuvView_);            // index 1: RGB to YUV
     centralStack_->addWidget(chromaSubsamplingView_); // index 2: Chroma Subsampling
+    centralStack_->addWidget(blockPartitioningView_);  // index 3: Block Partitioning
 
     setCentralWidget(centralStack_);
 }
@@ -79,6 +81,8 @@ void MainWindow::onStageSelectionChanged(int row) {
         centralStack_->setCurrentWidget(rgbYuvView_);
     } else if (row == kChromaSubsamplingStageRow) {
         centralStack_->setCurrentWidget(chromaSubsamplingView_);
+    } else if (row == kBlockPartitioningStageRow) {
+        centralStack_->setCurrentWidget(blockPartitioningView_);
     } else {
         centralStack_->setCurrentWidget(canvasPlaceholder_);
     }
