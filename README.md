@@ -45,17 +45,17 @@ Each pipeline stage implements a common `IPipelineStage` interface (Strategy pat
 
 ```
 Video-Codec-Visualizer/
-├── app/          Qt application entry point and MainWindow
-├── core/         Pure C++20 algorithm library (no Qt dependency)
-├── modules/      Per-stage educational design notes (intuitive explanation, math derivation, pseudocode, complexity, references, worked examples)
-├── ui/           Qt widgets, module views, and custom painters
-├── resources/    Icons, sample images, stylesheets
-├── examples/     Sample images/videos and example core/ usage
-├── docs/         SRS, architecture, roadmap
-├── tests/        GoogleTest suites mirroring core/
-├── benchmarks/   Google Benchmark targets for performance-sensitive code
-├── scripts/      Build and setup helper scripts
-└── third_party/  Vendored/FetchContent-pinned dependencies
+├── app/ Qt application entry point and MainWindow
+├── core/ Pure C++20 algorithm library (no Qt dependency)
+├── modules/ Per-stage educational design notes (intuitive explanation, math derivation, pseudocode, complexity, references, worked examples)
+├── ui/ Qt widgets, module views, and custom painters
+├── resources/ Icons, sample images, stylesheets
+├── examples/ Sample images/videos and example core/ usage
+├── docs/ SRS, architecture, roadmap
+├── tests/ GoogleTest suites mirroring core/
+├── benchmarks/ Google Benchmark targets for performance-sensitive code
+├── scripts/ Build and setup helper scripts
+└── third_party/ Vendored/FetchContent-pinned dependencies
 ```
 
 ## Technology Stack
@@ -102,11 +102,12 @@ Qt 6, OpenCV 4.x, Eigen 3, fmt, spdlog, GoogleTest, Google Benchmark. See [docs/
 
 ## Project Roadmap
 
-See [docs/ROADMAP.md](docs/ROADMAP.md) for the full staged plan. Current status: Stages 1 and 2 done; Stage 3 (Chroma Subsampling) is next.
+See [docs/ROADMAP.md](docs/ROADMAP.md) for the full staged plan. Current status: Stages 1, 2, and 3 done; Stage 4 (Block Partitioning) is next.
 
 ## Implemented Modules
 
 - **RGB to YUV** — `ColorSpaceConverter` (BT.601/BT.709, forward and inverse), `ImageLoader`, and the `ui::RgbYuvView` module view. Educational note: [modules/color_space/README.md](modules/color_space/README.md).
+- **Chroma Subsampling** — `ChromaSubsampler` (4:4:4/4:2:2/4:2:0, Nearest/Box filters), extended `PipelineContext` plane accessors, and the `ui::ChromaSubsamplingView` module view. Educational note: [modules/chroma_subsampling/README.md](modules/chroma_subsampling/README.md).
 
 See [docs/ROADMAP.md](docs/ROADMAP.md) for the complete implemented/upcoming module list.
 
