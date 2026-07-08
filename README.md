@@ -35,28 +35,28 @@ See [docs/ROADMAP.md](docs/ROADMAP.md) for what is implemented today versus plan
 
 The project follows a strict layered architecture so that every algorithm can be tested and reused independently of the Qt UI:
 
-\`\`\`
-Presentation (Qt)  ->  Application/Orchestration  ->  Core Algorithms (pure C++20)  ->  Data Model  ->  Platform/IO
-\`\`\`
+```
+Presentation (Qt) -> Application/Orchestration -> Core Algorithms (pure C++20) -> Data Model -> Platform/IO
+```
 
-Each pipeline stage implements a common \`IPipelineStage\` interface (Strategy pattern), registered with a \`PipelineController\` (Command + Observer patterns) that can run the full pipeline or step through it one stage at a time. Full details, class diagrams, and data-flow diagrams are in [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md), and the complete requirements are in [docs/SRS.md](docs/SRS.md).
+Each pipeline stage implements a common `IPipelineStage` interface (Strategy pattern), registered with a `PipelineController` (Command + Observer patterns) that can run the full pipeline or step through it one stage at a time. Full details, class diagrams, and data-flow diagrams are in [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md), and the complete requirements are in [docs/SRS.md](docs/SRS.md).
 
 ## Folder Structure
 
-\`\`\`
+```
 Video-Codec-Visualizer/
 ├── app/          Qt application entry point and MainWindow
 ├── core/         Pure C++20 algorithm library (no Qt dependency)
-├── modules/      One subfolder per pipeline stage (added as each stage is implemented)
-├── ui/           Qt widgets and custom painters
+├── modules/      Per-stage educational design notes (intuitive explanation, math derivation, pseudocode, complexity, references, worked examples)
+├── ui/           Qt widgets, module views, and custom painters
 ├── resources/    Icons, sample images, stylesheets
 ├── examples/     Sample images/videos and example core/ usage
-├── docs/         SRS, architecture, roadmap, and per-module design docs
-├── tests/        GoogleTest suites mirroring core/ and modules/
+├── docs/         SRS, architecture, roadmap
+├── tests/        GoogleTest suites mirroring core/
 ├── benchmarks/   Google Benchmark targets for performance-sensitive code
 ├── scripts/      Build and setup helper scripts
 └── third_party/  Vendored/FetchContent-pinned dependencies
-\`\`\`
+```
 
 ## Technology Stack
 
@@ -73,28 +73,28 @@ Video-Codec-Visualizer/
 
 ## Build Instructions
 
-> The build system is being scaffolded incrementally. This section will be kept accurate as each stage lands.
+The build system is being scaffolded incrementally. This section will be kept accurate as each stage lands.
 
 Prerequisites: CMake >= 3.24, a C++20 compiler, Qt 6, OpenCV, and Eigen3 installed and discoverable by CMake.
 
-\`\`\`bash
+```bash
 git clone https://github.com/anupam-iitbbs/Video-Codec-Visualizer.git
 cd Video-Codec-Visualizer
 cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
 cmake --build build -j
-\`\`\`
+```
 
 ## Running
 
-\`\`\`bash
+```bash
 ./build/app/ivcv_app
-\`\`\`
+```
 
 ## Running Tests
 
-\`\`\`bash
+```bash
 ctest --test-dir build --output-on-failure
-\`\`\`
+```
 
 ## Dependencies
 
@@ -102,13 +102,20 @@ Qt 6, OpenCV 4.x, Eigen 3, fmt, spdlog, GoogleTest, Google Benchmark. See [docs/
 
 ## Project Roadmap
 
-See [docs/ROADMAP.md](docs/ROADMAP.md) for the full staged plan. Current status: **Stage 1 — project scaffolding** in progress.
+See [docs/ROADMAP.md](docs/ROADMAP.md) for the full staged plan. Current status: Stages 1 and 2 done; Stage 3 (Chroma Subsampling) is next.
+
+## Implemented Modules
+
+- **RGB to YUV** — `ColorSpaceConverter` (BT.601/BT.709, forward and inverse), `ImageLoader`, and the `ui::RgbYuvView` module view. Educational note: [modules/color_space/README.md](modules/color_space/README.md).
+
+See [docs/ROADMAP.md](docs/ROADMAP.md) for the complete implemented/upcoming module list.
 
 ## Documentation
 
 - [docs/SRS.md](docs/SRS.md) — Software Requirements Specification
 - [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) — System architecture, class diagrams, data flow
 - [docs/ROADMAP.md](docs/ROADMAP.md) — Staged development roadmap and status
+- `modules/<name>/README.md` — Per-module educational notes: intuitive explanation, mathematical derivation, pseudocode, computational complexity, standards references, and a worked example, added as each module is implemented.
 
 ## Contributing
 
@@ -124,11 +131,11 @@ Contributions are welcome. Please open an issue to discuss significant changes b
 
 ## License
 
-This project is licensed under the [MIT License](LICENSE).
+This project is licensed under the MIT License.
 
 ## Contact
 
-Repository maintained by [anupam-iitbbs](https://github.com/anupam-iitbbs). Please use GitHub Issues for questions, bug reports, and feature requests.
+Repository maintained by anupam-iitbbs. Please use GitHub Issues for questions, bug reports, and feature requests.
 
 ## Acknowledgements
 
@@ -139,3 +146,4 @@ Inspired by decades of published video coding research and the open-source codec
 - ITU-T and ISO/IEC video coding standards (H.264/AVC, H.265/HEVC)
 - "Digital Video and HD: Algorithms and Interfaces" — Charles Poynton
 - JPEG standard (ISO/IEC 10918-1)
+- ITU-R BT.601 and ITU-R BT.709 (color space conversion coefficients; see [modules/color_space/README.md](modules/color_space/README.md))
