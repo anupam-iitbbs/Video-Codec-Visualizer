@@ -5,6 +5,7 @@ add_executable(ivcv_core_tests
 core/PipelineContextTest.cpp
 core/ImageBufferTest.cpp
 core/ColorSpaceConverterTest.cpp
+core/ChromaSubsamplerTest.cpp
 )
 
 target_link_libraries(ivcv_core_tests
