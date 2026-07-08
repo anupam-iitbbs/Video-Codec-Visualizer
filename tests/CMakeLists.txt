@@ -2,13 +2,15 @@
 # minimum 80% coverage target on core/).
 
 add_executable(ivcv_core_tests
-    core/PipelineContextTest.cpp
+core/PipelineContextTest.cpp
+core/ImageBufferTest.cpp
+core/ColorSpaceConverterTest.cpp
 )
 
 target_link_libraries(ivcv_core_tests
-    PRIVATE
-        ivcv::core
-        GTest::gtest_main
+PRIVATE
+ivcv::core
+GTest::gtest_main
 )
 
 include(GoogleTest)
