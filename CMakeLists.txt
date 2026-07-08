@@ -1,9 +1,9 @@
 cmake_minimum_required(VERSION 3.24)
 
 project(InteractiveVideoCodecVisualizer
-    VERSION 0.1.0
-    DESCRIPTION "Interactive Video Codec Visualizer - see how every pixel becomes a compressed bitstream"
-    LANGUAGES CXX)
+VERSION 0.1.0
+DESCRIPTION "Interactive Video Codec Visualizer - see how every pixel becomes a compressed bitstream"
+LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -30,7 +30,7 @@ find_package(fmt REQUIRED)
 find_package(spdlog REQUIRED)
 
 if(IVCV_BUILD_APP)
-    find_package(Qt6 REQUIRED COMPONENTS Widgets)
+find_package(Qt6 REQUIRED COMPONENTS Widgets)
 endif()
 
 # ---------------------------------------------------------------------------
@@ -39,37 +39,38 @@ endif()
 # system-wide.
 # ---------------------------------------------------------------------------
 if(IVCV_BUILD_TESTS)
-    FetchContent_Declare(
-        googletest
-        GIT_REPOSITORY https://github.com/google/googletest.git
-        GIT_TAG v1.15.2
-    )
-    set(INSTALL_GTEST OFF CACHE BOOL "" FORCE)
-    set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
-    FetchContent_MakeAvailable(googletest)
-    enable_testing()
+FetchContent_Declare(
+googletest
+GIT_REPOSITORY https://github.com/google/googletest.git
+GIT_TAG v1.15.2
+)
+set(INSTALL_GTEST OFF CACHE BOOL "" FORCE)
+set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
+FetchContent_MakeAvailable(googletest)
+enable_testing()
 endif()
 
 if(IVCV_BUILD_BENCHMARKS)
-    FetchContent_Declare(
-        benchmark
-        GIT_REPOSITORY https://github.com/google/benchmark.git
-        GIT_TAG v1.9.0
-    )
-    set(BENCHMARK_ENABLE_TESTING OFF CACHE BOOL "" FORCE)
-    FetchContent_MakeAvailable(benchmark)
+FetchContent_Declare(
+benchmark
+GIT_REPOSITORY https://github.com/google/benchmark.git
+GIT_TAG v1.9.0
+)
+set(BENCHMARK_ENABLE_TESTING OFF CACHE BOOL "" FORCE)
+FetchContent_MakeAvailable(benchmark)
 endif()
 
 add_subdirectory(core)
 
 if(IVCV_BUILD_APP)
-    add_subdirectory(app)
+add_subdirectory(ui)
+add_subdirectory(app)
 endif()
 
 if(IVCV_BUILD_TESTS)
-    add_subdirectory(tests)
+add_subdirectory(tests)
 endif()
 
 if(IVCV_BUILD_BENCHMARKS)
-    add_subdirectory(benchmarks)
+add_subdirectory(benchmarks)
 endif()
